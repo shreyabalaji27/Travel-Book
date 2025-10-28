@@ -1,0 +1,12 @@
+[
+  { "name": "CityGo Hatchback 1", "cab_type": "Hatchback", "capacity": 4, "price_per_km": 10, "available": true },
+  { "name": "CityGo Hatchback 2", "cab_type": "Hatchback", "capacity": 4, "price_per_km": 11, "available": true },
+  { "name": "Metro Hatchback 3", "cab_type": "Hatchback", "capacity": 4, "price_per_km": 12, "available": true },
+  { "name": "Urban Sedan 1", "cab_type": "Sedan", "capacity": 4, "price_per_km": 15, "available": true },
+  { "name": "Urban Sedan 2", "cab_type": "Sedan", "capacity": 4, "price_per_km": 16, "available": true },
+  { "name": "Executive Sedan 3", "cab_type": "Sedan", "capacity": 4, "price_per_km": 17, "available": true },
+  { "name": "Mountain SUV 1", "cab_type": "SUV", "capacity": 6, "price_per_km": 22, "available": true },
+  { "name": "Mountain SUV 2", "cab_type": "SUV", "capacity": 6, "price_per_km": 23, "available": true },
+  { "name": "Trail SUV 3", "cab_type": "SUV", "capacity": 6, "price_per_km": 25, "available": true },
+  { "name": "Royal Luxury 1", "cab_type": "Luxury", "capacity": 4, "price_per_km": 40, "available": true }
+]

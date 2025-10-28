@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup | TravelBook</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #2563eb, #14b8a6);
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #2563eb;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    button:hover { background: #1d4ed8; }
+
+    p { font-size: 0.9rem; margin-top: 1rem; }
+    a { color: #2563eb; text-decoration: none; }
+
+    .msg {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .msg.error { color: #ef4444; }
+    .msg.success { color: #22c55e; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Create Account ✈️</h2>
+    <form id="signupForm">
+      <input type="text" id="firstName" placeholder="First Name" required />
+      <input type="text" id="lastName" placeholder="Last Name" />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="text" id="phone" placeholder="Phone (optional)" />
+      <button type="submit">Sign Up</button>
+    </form>
+    <div id="message" class="msg"></div>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("signupForm");
+    const msg = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.textContent = "";
+      msg.className = "msg";
+
+      const data = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        password: document.getElementById("password").value,
+      };
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          msg.textContent = "✅ Account created successfully!";
+          msg.classList.add("success");
+          setTimeout(() => (window.location.href = "login.html"), 1500);
+        } else {
+          msg.textContent = result.message || "Signup failed!";
+          msg.classList.add("error");
+        }
+      } catch (err) {
+        msg.textContent = "⚠️ Server error. Please try again.";
+        msg.classList.add("error");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+    # Node dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# System files
+.DS_Store
+
+# Build outputs (if you have React or similar)
+dist/
+build/
+
+
+.history

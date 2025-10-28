@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings | TravelBook</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; color: #333; margin-bottom: 20px; }
+    .booking {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .booking p { margin: 6px 0; }
+    footer {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TravelBook</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="flights.html">Flights</a>
+      <a href="cabs.html">Cabs</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>My Bookings</h2>
+    <div id="bookingsList">Loading your bookings...</div>
+  </div>
+
+  <footer>© 2025 TravelBook. All rights reserved.</footer>
+
+  <script>
+    async function loadBookings() {
+      const username = localStorage.getItem("username");
+      if (!username) {
+        document.getElementById("bookingsList").innerHTML = "Please log in first.";
+        return;
+      }
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/my_bookings?username=" + username);
+        const data = await res.json();
+
+        if (!data.length) {
+          document.getElementById("bookingsList").innerHTML = "No bookings yet.";
+          return;
+        }
+
+        document.getElementById("bookingsList").innerHTML = data.map(b => {
+          if (b.type === "flight") {
+            return `
+              <div class="booking">
+                <p><b>✈️ Flight:</b> ${b.flight_no}</p>
+                <p><b>From:</b> ${b.from} → <b>To:</b> ${b.to}</p>
+                <p><b>Departure:</b> ${b.departure_time} | <b>Arrival:</b> ${b.arrival_time}</p>
+                <p><b>Price:</b> ₹${b.price}</p>
+              </div>
+            `;
+          } else if (b.type === "cab") {
+            return `
+              <div class="booking">
+                <p><b>🚗 Cab Type:</b> ${b.cab_type}</p>
+                <p><b>Date:</b> ${b.date}</p>
+                <p><b>Pickup:</b> ${b.pickup} → <b>Drop:</b> ${b.drop}</p>
+                <p><b>Rate:</b> ₹${b.price_per_km}/km</p>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="booking">
+                <p><b>Other Booking:</b> ${JSON.stringify(b)}</p>
+              </div>
+            `;
+          }
+        }).join('');
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("bookingsList").innerHTML = "Error fetching bookings.";
+      }
+    }
+
+    loadBookings();
+  </script>
+</body>
+</html>

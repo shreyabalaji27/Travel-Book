@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Flight</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #f1f8e9);
+      margin: 0;
+      color: #333;
+    }
+    header {
+      background-color: #1565c0;
+      padding: 15px 0;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #0d47a1;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: 500;
+    }
+    select,
+    input[type="date"],
+    button {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    button {
+      background-color: #1565c0;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background-color: #0d47a1;
+    }
+    .results {
+      margin-top: 30px;
+    }
+    .flight-card {
+      background: #f1f8e9;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .flight-card h4 {
+      margin: 0 0 5px;
+      color: #2e7d32;
+    }
+    .book-btn {
+      margin-top: 10px;
+      background-color: #43a047;
+      border: none;
+      padding: 8px 15px;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .book-btn:hover {
+      background-color: #2e7d32;
+    }
+  </style>
+
+  <script>
+    // ✅ Step 1: Check login state
+    document.addEventListener("DOMContentLoaded", () => {
+      const isLoggedIn = localStorage.getItem("auth");
+      const user = localStorage.getItem("user");
+
+      if (!isLoggedIn || isLoggedIn !== "true" || !user) {
+        alert("Please login first!");
+        window.location.href = "login.html";
+        return;
+      }
+
+      // ✅ Step 2: Populate dropdowns
+      const flights = [
+        { "_id": "68ffcb9d434e64ddd9b42eb0", "flight_no": "AI101", "from": "BLR", "to": "DEL", "departure_time": "08:00", "arrival_time": "10:30", "eco_seats": 120, "price": 4500 },
+        { "_id": "68ffcb9d434e64ddd9b42eb1", "flight_no": "AI102", "from": "DEL", "to": "BLR", "departure_time": "18:00", "arrival_time": "20:30", "eco_seats": 120, "price": 4500 },
+        { "_id": "68ffcb9d434e64ddd9b42eb2", "flight_no": "AI201", "from": "BLR", "to": "MUM", "departure_time": "09:30", "arrival_time": "11:00", "eco_seats": 100, "price": 3500 },
+        { "_id": "68ffcb9d434e64ddd9b42eb3", "flight_no": "AI202", "from": "MUM", "to": "BLR", "departure_time": "17:00", "arrival_time": "18:30", "eco_seats": 100, "price": 3500 },
+        { "_id": "68ffcb9d434e64ddd9b42eb4", "flight_no": "AI301", "from": "DEL", "to": "MUM", "departure_time": "07:00", "arrival_time": "09:00", "eco_seats": 110, "price": 4000 },
+        { "_id": "68ffcb9d434e64ddd9b42eb5", "flight_no": "AI302", "from": "MUM", "to": "DEL", "departure_time": "19:00", "arrival_time": "21:00", "eco_seats": 110, "price": 4000 }
+      ];
+
+      const fromSel = document.getElementById("from");
+      const toSel = document.getElementById("to");
+
+      const cities = [...new Set(flights.flatMap(f => [f.from, f.to]))];
+      cities.forEach(city => {
+        const opt = document.createElement("option");
+        opt.value = city;
+        opt.textContent = city;
+        fromSel.appendChild(opt);
+      });
+
+      fromSel.addEventListener("change", () => {
+        toSel.innerHTML = "<option value=''>Select destination</option>";
+        cities.filter(c => c !== fromSel.value).forEach(city => {
+          const opt = document.createElement("option");
+          opt.value = city;
+          opt.textContent = city;
+          toSel.appendChild(opt);
+        });
+      });
+
+      window.flights = flights;
+    });
+
+    // ✅ Step 3: Logout
+    function logout() {
+      localStorage.removeItem("auth");
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+
+    // ✅ Step 4: Search flights
+    function searchFlights(e) {
+      e.preventDefault();
+      const from = document.getElementById("from").value;
+      const to = document.getElementById("to").value;
+      const resDiv = document.getElementById("results");
+
+      const results = window.flights.filter(f => f.from === from && f.to === to);
+      resDiv.innerHTML = "";
+
+      if (results.length === 0) {
+        resDiv.innerHTML = "<p>No flights found.</p>";
+        return;
+      }
+
+      results.forEach(f => {
+        resDiv.innerHTML += `
+          <div class="flight-card" id="${f._id}">
+            <h4>${f.flight_no} — ₹${f.price}</h4>
+            <p><strong>${f.from}</strong> → <strong>${f.to}</strong></p>
+            <p>Departure: ${f.departure_time} | Arrival: ${f.arrival_time}</p>
+            <p>Economy Seats: <span id="seats-${f._id}">${f.eco_seats}</span></p>
+            <button class="book-btn" onclick="bookFlight('${f.flight_no}', '${f._id}')">Book Flight</button>
+          </div>
+        `;
+      });
+    }
+
+    // ✅ Step 5: Book flight
+    async function bookFlight(flightNo, id) {
+      const user = localStorage.getItem("user");
+      if (!user) {
+        alert("Please login first!");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/book_flight", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user, flight_no: flightNo })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("✅ " + data.message);
+          const seatSpan = document.getElementById(`seats-${id}`);
+          seatSpan.textContent = Math.max(0, +seatSpan.textContent - 1);
+        } else {
+          alert("❌ " + (data.message || "Booking failed"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server error. Try again later.");
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="flights.html" class="active">Flights</a>
+      <a href="signup.html">Signup</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Book a Flight</h2>
+    <form onsubmit="searchFlights(event)">
+      <label for="from">From:</label>
+      <select id="from" required>
+        <option value="">Select origin</option>
+      </select>
+
+      <label for="to">To:</label>
+      <select id="to" required>
+        <option value="">Select destination</option>
+      </select>
+
+      <label for="date">Date:</label>
+      <input type="date" id="date" required />
+
+      <button type="submit">Search Flights</button>
+    </form>
+
+    <div class="results" id="results"></div>
+  </main>
+</body>
+</html>

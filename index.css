@@ -1,0 +1,250 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Travel booking design system - professional and modern */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 215 25% 27%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 27%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 27%;
+
+    /* Travel-themed primary blues */
+    --primary: 213 94% 68%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 213 94% 60%;
+
+    /* Secondary grays */
+    --secondary: 210 11% 96%;
+    --secondary-foreground: 215 25% 27%;
+
+    --muted: 210 11% 96%;
+    --muted-foreground: 215 10% 55%;
+
+    /* Travel accent - warm orange */
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+    --accent-hover: 25 95% 48%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 213 94% 68%;
+
+    --radius: 0.75rem;
+
+    /* Travel-specific design tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(213 94% 68%), hsl(213 94% 45%));
+    --card-shadow: 0 4px 6px -1px hsl(213 20% 20% / 0.1), 0 2px 4px -1px hsl(213 20% 20% / 0.06);
+    --card-shadow-hover: 0 10px 15px -3px hsl(213 20% 20% / 0.1), 0 4px 6px -2px hsl(213 20% 20% / 0.05);
+    
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --travel-blue-light: 213 100% 96%;
+    --travel-blue-dark: 213 94% 45%;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .story-link {
+    @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+}
+
+/* Floating Chatbot */
+#chatbot-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-family: "Segoe UI", sans-serif;
+}
+
+#chatbot-toggle {
+  background: linear-gradient(135deg, hsl(213 94% 68%), hsl(25 95% 53%));
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+#chatbot-window {
+  width: 320px;
+  height: 420px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+}
+
+#chatbot-window.hidden { display: none; }
+
+#chatbot-header {
+  background: linear-gradient(135deg, hsl(213 94% 68%), hsl(25 95% 53%));
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+}
+
+#chatbot-close {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+
+#chatbot-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+}
+
+.msg {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.user { background: hsl(213 94% 68%); color: white; margin-left: auto; border-bottom-right-radius: 0; }
+.bot { background: #f3f4f6; color: #333; border-bottom-left-radius: 0; }
+
+/* Typing dots */
+.typing span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 1px;
+  background: #666;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+.typing span:nth-child(2){ animation-delay: 0.2s; }
+.typing span:nth-child(3){ animation-delay: 0.4s; }
+
+@keyframes blink { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+
+#chatbot-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  border-top: 1px solid #ddd;
+}
+
+#chatbot-quick button {
+  flex: 1;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 8px;
+  background: hsl(213 94% 90%);
+  cursor: pointer;
+}
+
+#chatbot-quick button:hover { background: hsl(213 94% 75%); }
+
+.chat-input-container { display: flex; border-top: 1px solid #ddd; }
+
+#chatbot-input {
+  flex: 1; border: none; padding: 10px; font-size: 0.9rem;
+  border-radius: 0 0 0 12px; outline: none;
+}
+
+#chatbot-send {
+  background: hsl(25 95% 53%);
+  color: #fff; border: none; padding: 10px 15px;
+  border-radius: 0 0 12px 0; cursor: pointer;
+}
+#chatbot-send:hover { background: hsl(25 95% 45%); }

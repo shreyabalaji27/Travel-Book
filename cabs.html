@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cab Booking | TravelBook</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    nav button {
+      background: white;
+      color: #007bff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    nav button:hover { background: #e9ecef; }
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: 600;
+      color: #333;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button[type="submit"] {
+      background: #007bff;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button[type="submit"]:hover {
+      background: #0056b3;
+    }
+    .cab-card {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+      background: #f9fbfd;
+    }
+    .cab-card button {
+      margin-top: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .cab-card button:hover {
+      background: #218838;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #666;
+      font-size: 14px;
+    }
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .popup.show { opacity: 1; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>TravelBook - Cabs</h1>
+    <nav>
+      <button onclick="window.location.href='index.html'">🏠 Home</button>
+      <button onclick="window.location.href='flights.html'">✈️ Flights</button>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Find a Cab</h2>
+      <form id="cabSearchForm">
+        <div class="form-grid">
+          <div>
+            <label>Pickup</label><br>
+            <input type="text" id="pickup" required>
+          </div>
+
+          <div>
+            <label>Drop</label><br>
+            <input type="text" id="drop" required>
+          </div>
+
+          <div>
+            <label>Date</label><br>
+            <input type="date" id="date" required>
+          </div>
+
+          <div>
+            <label>Time</label><br>
+            <input type="time" id="time" required>
+          </div>
+
+          <div>
+            <label>Cab Type</label><br>
+            <select id="cabType" required>
+              <option value="">Select</option>
+              <option>Hatchback</option>
+              <option>Sedan</option>
+              <option>SUV</option>
+              <option>Luxury</option>
+            </select>
+          </div>
+        </div>
+        <br>
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    <br><hr><br>
+
+    <section id="cab-list" style="display:none;">
+      <h2>Available Cabs</h2>
+      <div id="cabs-container"></div>
+    </section>
+  </main>
+
+  <footer>
+    Don’t have an account? <a href="signup.html">Sign up here</a>
+  </footer>
+
+  <div id="popup" class="popup"></div>
+
+  <script>
+    const form = document.getElementById("cabSearchForm");
+    const cabList = document.getElementById("cab-list");
+    const cabContainer = document.getElementById("cabs-container");
+    const popup = document.getElementById("popup");
+    const username = localStorage.getItem("username");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      cabList.style.display = "block";
+      await loadCabs();
+    });
+
+    async function loadCabs() {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/cabs");
+        const data = await res.json();
+        cabContainer.innerHTML = "";
+
+        const cabType = document.getElementById("cabType").value;
+        const filtered = data.filter(c => !cabType || c.cab_type === cabType);
+
+        if (!filtered.length) {
+          cabContainer.innerHTML = "<p>No cabs available.</p>";
+          return;
+        }
+
+        filtered.forEach(c => {
+          const div = document.createElement("div");
+          div.className = "cab-card";
+          div.innerHTML = `
+            <h3>${c.cab_type}</h3>
+            <p><b>Price:</b> ₹${c.price_per_km}/km</p>
+            <button onclick="bookCab('${c._id}', '${c.cab_type}', ${c.price_per_km})">Book Cab</button>
+          `;
+          cabContainer.appendChild(div);
+        });
+      } catch (err) {
+        showPopup("Error loading cabs");
+      }
+    }
+
+    async function bookCab(id, type, price) {
+      if (!username) {
+        showPopup("Please log in first");
+        return;
+      }
+
+      const pickup = document.getElementById("pickup").value;
+      const drop = document.getElementById("drop").value;
+      const date = document.getElementById("date").value;
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/book_cab", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username,
+            cab_id: id,
+            pickup,
+            drop,
+            date,
+            cab_type: type,
+            price_per_km: price
+          })
+        });
+
+        const result = await res.json();
+        showPopup(result.message || "Cab booked!");
+      } catch {
+        showPopup("Booking failed");
+      }
+    }
+
+    function showPopup(msg) {
+      popup.textContent = msg;
+      popup.classList.add("show");
+      setTimeout(() => popup.classList.remove("show"), 2500);
+    }
+  </script>
+</body>
+</html>

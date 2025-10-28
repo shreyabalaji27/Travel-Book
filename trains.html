@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Booking - TravelBook | IRCTC Train Tickets</title>
+    <meta name="description" content="Book train tickets across India at TravelBook. Real-time availability, all classes, instant booking. Your trusted partner for railway reservations.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, hsl(120 60% 45%) 0%, hsl(120 60% 55%) 100%);
+            color: white;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .page-icon {
+            width: 5rem;
+            height: 5rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .booking-form {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            margin: 2rem 0;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+        }
+        
+        .form-input, .form-select {
+            padding: 0.75rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: hsl(120 60% 45%);
+            box-shadow: 0 0 0 3px hsl(120 60% 45% / 0.1);
+        }
+        
+        .popular-routes {
+            background: hsl(var(--muted));
+            padding: 4rem 0;
+        }
+        
+        .route-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .route-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .route-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .route-cities {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .route-info {
+            text-align: center;
+        }
+        
+        .train-name {
+            color: hsl(120 60% 45%);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .route-duration {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="logo-text">TravelBook</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="flights.html" class="nav-link">Flights</a>
+                    <a href="cabs.html" class="nav-link">Cabs</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <a href="index.html" class="back-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m12 19-7-7 7-7"/>
+                    <path d="M19 12H5"/>
+                </svg>
+                Back to Home
+            </a>
+            
+            <div class="page-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="6" width="16" height="10" rx="2"/>
+                    <circle cx="8" cy="18" r="2"/>
+                    <circle cx="16" cy="18" r="2"/>
+                    <path d="m8 6 4-4 4 4"/>
+                    <path d="M12 2v4"/>
+                </svg>
+            </div>
+            
+            <h1 class="hero-title">Book Train Tickets</h1>
+            <p class="hero-subtitle">Quick and easy train booking with real-time availability across India</p>
+        </div>
+    </section>
+
+    <!-- Train Booking Form -->
+    <section style="padding: 4rem 0;">
+        <div class="container">
+            <form class="booking-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">From</label>
+                        <select class="form-select" required>
+                            <option value="">Select departure station</option>
+                            <option value="NDLS">New Delhi (NDLS)</option>
+                            <option value="CSMT">Mumbai CST (CSMT)</option>
+                            <option value="SBC">Bangalore City (SBC)</option>
+                            <option value="MAS">Chennai Central (MAS)</option>
+                            <option value="HWH">Kolkata Howrah (HWH)</option>
+                            <option value="SC">Hyderabad (SC)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">To</label>
+                        <select class="form-select" required>
+                            <option value="">Select destination station</option>
+                            <option value="NDLS">New Delhi (NDLS)</option>
+                            <option value="CSMT">Mumbai CST (CSMT)</option>
+                            <option value="SBC">Bangalore City (SBC)</option>
+                            <option value="MAS">Chennai Central (MAS)</option>
+                            <option value="HWH">Kolkata Howrah (HWH)</option>
+                            <option value="SC">Hyderabad (SC)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Journey Date</label>
+                        <input type="date" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Class</label>
+                        <select class="form-select" required>
+                            <option value="1A">First AC (1A)</option>
+                            <option value="2A">Second AC (2A)</option>
+                            <option value="3A">Third AC (3A)</option>
+                            <option value="SL" selected>Sleeper (SL)</option>
+                            <option value="2S">Second Seating</option>
+                            <option value="CC">AC Chair Car</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Passengers</label>
+                        <select class="form-select" required>
+                            <option value="1">1 Passenger</option>
+                            <option value="2">2 Passengers</option>
+                            <option value="3">3 Passengers</option>
+                            <option value="4">4 Passengers</option>
+                            <option value="6">6 Passengers (Max)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Quota</label>
+                        <select class="form-select">
+                            <option value="GN">General</option>
+                            <option value="TQ">Tatkal</option>
+                            <option value="LD">Ladies</option>
+                            <option value="SS">Senior Citizen</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="display: flex; align-items: end;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%; background: hsl(120 60% 45%);">
+                            Check Availability
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Popular Routes Section -->
+    <section class="popular-routes">
+        <div class="container">
+            <h2 class="section-title">Popular Train Routes</h2>
+            
+            <div class="widgets-grid" style="margin-top: 2rem;">
+                <div class="route-card">
+                    <div class="route-header">
+                        <span class="route-cities">New Delhi</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="6" width="16" height="10" rx="2"/>
+                            <circle cx="8" cy="18" r="2"/>
+                            <circle cx="16" cy="18" r="2"/>
+                        </svg>
+                        <span class="route-cities">Mumbai</span>
+                    </div>
+                    <div class="route-info">
+                        <div class="train-name">Rajdhani Express</div>
+                        <div class="route-duration">16h 35m</div>
+                    </div>
+                </div>
+                
+                <div class="route-card">
+                    <div class="route-header">
+                        <span class="route-cities">Chennai</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="6" width="16" height="10" rx="2"/>
+                            <circle cx="8" cy="18" r="2"/>
+                            <circle cx="16" cy="18" r="2"/>
+                        </svg>
+                        <span class="route-cities">Bangalore</span>
+                    </div>
+                    <div class="route-info">
+                        <div class="train-name">Shatabdi Express</div>
+                        <div class="route-duration">4h 45m</div>
+                    </div>
+                </div>
+                
+                <div class="route-card">
+                    <div class="route-header">
+                        <span class="route-cities">Kolkata</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="6" width="16" height="10" rx="2"/>
+                            <circle cx="8" cy="18" r="2"/>
+                            <circle cx="16" cy="18" r="2"/>
+                        </svg>
+                        <span class="route-cities">Delhi</span>
+                    </div>
+                    <div class="route-info">
+                        <div class="train-name">Duronto Express</div>
+                        <div class="route-duration">17h 20m</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- Brand Info -->
+                    <div class="footer-section">
+                        <h3 class="footer-title">TravelBook</h3>
+                        <p class="footer-text">
+                            Your trusted partner for all travel bookings – Flights, Trains, and Cabs, all in one place. 
+                            Safe, reliable, and affordable rides at your fingertips.
+                        </p>
+                        <div class="footer-socials">
+                            <a href="#" class="social-link" aria-label="Facebook">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.6l.4-4H14V7a1 1 0 0 1 1-1h3V2z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Twitter">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 
+                                    4.48 0 0 0 22.4.36a9 9 0 0 1-2.88 1.1 
+                                    4.52 4.52 0 0 0-7.72 4.12A12.82 
+                                    12.82 0 0 1 3 2.16a4.48 4.48 0 
+                                    0 0 1.4 6.04A4.41 4.41 0 0 1 2.8 
+                                    7.5v.06a4.52 4.52 0 0 0 3.6 4.43 
+                                    4.52 4.52 0 0 1-2.05.08A4.52 
+                                    4.52 0 0 0 8.4 17a9.05 9.05 0 
+                                    0 1-5.6 1.93A9.32 9.32 0 0 1 
+                                    2 18.9 12.76 12.76 0 0 0 8.29 
+                                    21c7.55 0 11.68-6.26 11.68-11.68 
+                                    0-.18-.01-.35-.02-.53A8.18 
+                                    8.18 0 0 0 23 3z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-link" aria-label="Instagram">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7 2C4.2 2 2 4.2 2 7v10c0 
+                                    2.8 2.2 5 5 5h10c2.8 0 5-2.2 
+                                    5-5V7c0-2.8-2.2-5-5-5H7zm10 
+                                    2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 
+                                    3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 
+                                    1.3-3 3-3h10zm-5 3a5 5 0 100 
+                                    10 5 5 0 000-10zm0 2a3 3 0 
+                                    110 6 3 3 0 010-6zm4.8-.9a1.1 
+                                    1.1 0 100 2.2 1.1 1.1 0 000-2.2z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="flights.html" class="footer-link">Flight Booking</a></li>
+                            <li><a href="trains.html" class="footer-link">Train Booking</a></li>
+                            <li><a href="cabs.html" class="footer-link">Cab Booking</a></li>
+                            <li><a href="#" class="footer-link">Hotels</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Support -->
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Support</h4>
+                        <ul class="footer-links">
+                            <li><a href="#" class="footer-link">Help Center</a></li>
+                            <li><a href="#" class="footer-link">Contact Us</a></li>
+                            <li><a href="#" class="footer-link">Cancellation Policy</a></li>
+                            <li><a href="#" class="footer-link">Refund Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Contact</h4>
+                        <ul class="footer-links">
+                            <li><span class="footer-link">📞 +91 98765 43210</span></li>
+                            <li><span class="footer-link">✉️ support@travelbook.com</span></li>
+                            <li><span class="footer-link">📍 Bangalore, India</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2025 TravelBook. All rights reserved. | Designed with ❤️ for travelers</p>
+                </div>
+            </div>
+        </footer>
+    </section>
+        <!-- Chatbot -->
+    <div id="chatbot-widget">
+      <button id="chatbot-toggle">💬</button>
+      <div id="chatbot-window" class="hidden">
+        <div id="chatbot-header">TravelBot <span id="chatbot-close">✖</span></div>
+        <div id="chatbot-messages"></div>
+        <div id="chatbot-quick">
+          <button data-msg="flights">✈ Flights</button>
+          <button data-msg="trains">🚆 Trains</button>
+          <button data-msg="cabs">🚖 Cabs</button>
+          <button data-msg="help">❓ Help</button>
+        </div>
+        <div class="chat-input-container">
+          <input type="text" id="chatbot-input" placeholder="Type a message..." />
+          <button id="chatbot-send">➤</button>
+        </div>
+      </div>
+    </div>
+    <script src="chatbot.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
